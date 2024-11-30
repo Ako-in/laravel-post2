@@ -23,30 +23,41 @@
                     <h2 class="card-title fs-5">{{ $post->title }}</h2>
                     <p class="card-text">{{ $post->content }}</p>
                     <p class="card-text">{{$post->created_at->format('Y-m-d H:i') }}</p>
-
                 </div>
 
                 <!-- 右側のケバブメニュー -->
 
                 @if(Auth::id() === $post->user_id)
-                    <div class="dropdown">
-                        <button class="btn p-2" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            ⋮
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                {{-- ログインユーザーのみ編集と削除を表示 --}}
+                    <div class="d-flex justify-content-end align-items-center">
+                        <a href="{{ route('posts.edit', $post) }}" class="btn btn-outline-primary me-1">編集</a>
+                        <form action="{{ route('posts.destroy', $post) }}" method="post">
+                            @csrf
+                            @method('delete')                                        
+                            <button type="submit" class="btn btn-outline-danger">削除</button>
+                        </form>    
+                        <div class="dropdown">
+                            {{-- <a href="#" class="btn p-2 kebab-menu" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                ⋮
+                            </a> --}}
+                            {{-- <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"> --}}
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                {{-- 編集 --}}
                                 <li>
-                                    <a href="{{ route('posts.edit', $post) }}" class="btn btn-outline-primary d-block me-1">編集</a>  
+                                    <a href="{{ route('posts.edit', $post) }}" class="dropdown-item">編集</a>  
                                 </li>
+                                {{-- 削除 --}}
                                 <li>
-                                    <form action="{{ route('posts.destroy', $post) }}" method="post">
+                                    <form action="{{ route('posts.destroy', $post) }}" method="post" class="d-inline">
                                         @csrf
                                         @method('delete')                                        
-                                            <button type="submit" class="btn btn-outline-danger">削除</button>
+                                        <button type="submit" class="dropdown-item text-danger">削除</button>
                                     </form>
                                 </li>
-                        </ul>
+                            </ul>
+                        </div>
                     </div>
+                        
+                    
                 @endif
             </div>
 
@@ -68,7 +79,7 @@
                     </form>
                 @endif
                 {{-- いいね数を表示 --}}
-                <span>{{ $post->likes->count() }}</span>
+                <span class="ms-2">{{ $post->likes->count() }}件</span>
             </div>
             <div class="card-body">
                 
