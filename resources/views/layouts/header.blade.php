@@ -10,6 +10,7 @@
         <nav class="navbar navbar-light bg-light fixed-top" style="height: 60px;">
         {{-- <nav> --}}
             <a href="{{ route('posts.index') }}">投稿アプリ</a>
+            <a href="{{route('user.index')}}">会員情報</a>
 
             <ul>
                 <li>
@@ -19,5 +20,7 @@
                     </form>
                 </li>
             </ul>
+
+            
         </nav>
 </header>

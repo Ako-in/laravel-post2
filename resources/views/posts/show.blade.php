@@ -30,19 +30,25 @@
                     </form>
                 @endif
             </div>
+            @foreach($post->comments as $comment)
+                    {{-- 親コメントを取得 --}}
+                        <hr>
+                        <p><strong>>{{ $comment->user->name }}</strong> {{ $comment->content }}</p>
+                        <p>{{$comment->created_at->format('Y-m-d H:i') }}</p>
+
+                        {{-- 返信がある場合は表示 --}}
+                        {{-- @if ($comment->replies->isNotEmpty())
+                            <div style="margin-left: 20px;">
+                                @foreach($comment->replies as $reply)
+                                    <hr>
+                                    <p>>>{{ $reply->user->name }}: {{ $reply->content }}</p>
+                                    <p>{{ $reply->created_at->format('Y-m-d H:i')  }}</p>
+                                @endforeach
+                            </div>
+                        @endif --}}
+            @endforeach
 
 
-
-            
-            {{-- <div class="d-flex">
-                  <a href="{{ route('posts.edit', $post) }}" class="btn btn-outline-primary d-block me-1">編集</a>
-
-                <form action="{{ route('posts.destroy', $post) }}" method="post">
-                    @csrf
-                    @method('delete')                                        
-                      <button type="submit" class="btn btn-outline-danger">削除</button>
-                </form>
-            </div>          --}}
         </div>
     </div>                 
 </div>

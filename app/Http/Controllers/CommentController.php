@@ -86,7 +86,7 @@ class CommentController extends Controller
         $reply = new Comment();
         $reply->content = $request->input('content');
         $reply->user_id = auth()->id();
-        // $reply->post_id = $comment->post_id;// 元の投稿IDを継承
+        $reply->post_id = $comment->post_id;// 元の投稿IDを継承
         $reply->parent_id = $comment->id;// 親コメントのIDを設定
         $reply->save();
 

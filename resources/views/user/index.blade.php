@@ -20,6 +20,12 @@
                 <div class="d-flex justify-content-end align-items-end mb-3">
                     <div>
                         <a href="{{ route('user.edit',$user) }}">編集</a>
+                        <form action="{{ route('user.destroy', $user) }}" method="post" class="d-inline">
+                            @csrf
+                            @method('delete')                                        
+                            <button type="submit" class="dropdown-item text-danger">削除</button>
+                        </form>
+                        
                     </div>
                 </div>
 
@@ -48,22 +54,29 @@
 
                     <div class="row pb-2 mb-2 border-bottom">
                         <div class="col-3">
-                            <span class="fw-bold">フリガナ</span>
-                        </div>
-
-                        <div class="col">
-                            <span>{{ $user->kana }}</span>
-                        </div>
-                    </div>
-
-                    <div class="row pb-2 mb-2 border-bottom">
-                        <div class="col-3">
                             <span class="fw-bold">メールアドレス</span>
                         </div>
 
                         <div class="col">
                             <span>{{ $user->email }}</span>
                         </div>
+                    </div>
+                    {{-- 設定したユーザーアイコン表示 --}}
+                    <div class="row pb-2 mb-2 border-bottom">
+                        <div class="col-3">
+                            <span class="fw-bold">ユーザーアイコン</span>
+                        </div>
+                        @if ($user->icon === null)
+                            <div class="col">
+                                <img src="{{ asset('storage/images/' . (!empty($post->user->icon) ? $post->user->icon : 'noimage.png')) }}" alt="User Icon" class="img-thumbnail" width="50">
+                            </div>
+                        @else
+                            <div class="col">
+                                <img src="{{ asset('storage/images/' . basename($user->icon)) }}" alt="User Icon" class="img-thumbnail rounded-circle" width="100">
+
+                                {{-- <img src="{{ asset('storage/images/' . $user->icon) }}" alt="User Icon" class="img-thumbnail" width="100"> --}}
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
