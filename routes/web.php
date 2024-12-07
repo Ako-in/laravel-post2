@@ -40,6 +40,7 @@ Route::get('/', function () {
 // Route::get('/posts/create', [PostController::class, 'create'])->middleware('auth')->name('posts.create');
 
 Route::resource('posts', PostController::class)->middleware(['auth', 'verified']);
+Route::get('/users/{user}', [UserController::class, 'show'])->name('users.show');
 Route::resource('user', UserController::class)->middleware(['auth', 'verified']);
 // Route::get('/posts', [PostController::class, 'index'])->middleware(['auth', 'verified'])->name('posts.index');
 

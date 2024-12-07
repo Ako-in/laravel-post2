@@ -17,7 +17,7 @@
 
                 <h1 class="mb-3 text-center">会員情報</h1>
 
-                <div class="d-flex justify-content-end align-items-end mb-3">
+                {{-- <div class="d-flex justify-content-end align-items-end mb-3">
                     <div>
                         <a href="{{ route('user.edit',$user) }}">編集</a>
                         <form action="{{ route('user.destroy', $user) }}" method="post" class="d-inline">
@@ -27,7 +27,7 @@
                         </form>
                         
                     </div>
-                </div>
+                </div> --}}
 
                 @if (session('flash_message'))
                     <div class="alert alert-info" role="alert">
@@ -78,6 +78,23 @@
                             </div>
                         @endif
                     </div>
+                    {{-- コメント --}}
+                    <div class="row pb-2 mb-2 border-bottom">
+                        <div class="col-3">
+                            <span class="fw-bold">自己紹介</span>
+                        </div>
+
+                        <div class="col">
+                            <span>{{ $user->comment }}</span>
+                        </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <a href="{{ route('user.edit',$user) }}"class="btn btn-primary me-2">編集</a>
+                    <form action="{{ route('user.destroy', $user) }}" method="post" class="d-inline" onsubmit="return confirm('本当に削除しますか？');">
+                        @csrf
+                        @method('delete')                                        
+                        <button type="submit" class="btn btn-danger">削除</button>
+                    </form>
                 </div>
             </div>
         </div>

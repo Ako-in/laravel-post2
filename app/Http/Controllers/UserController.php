@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -52,12 +56,21 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
         // ユーザー情報の取得
-        $user = User::findOrFail($id);
+        // $user = User::findOrFail($id);
         // ユーザー情報の詳細ページを表示
-        return view('user.show', compact('user'));
+
+        // ユーザーの投稿、コメント、いいねを取得
+        $posts = $user->posts()->latest()->paginate(10); // 投稿
+        $comments = $user->comments()->latest()->paginate(10); // コメント
+        $likes = $user->likes()->with('post')->latest()->paginate(10); // いいね
+
+        return view('user.show', compact('user', 'posts', 'comments', 'likes'));
+
+
+        // return view('user.show', compact('user'));
     }
 
     /**
@@ -89,6 +102,8 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255',
             // 'icon'=>'nullable|image|mimes:jpg,jpeg,png,gif|max:2048', // 画像バリデーション
             'icon' => 'nullable|image|max:2048', // image は JPEG, PNG, BMP, GIF, SVG を許可
+            'comment' => 'nullable|string|max:255',
+            // 'password' => 'nullable|string|min:8|confirmed',
         ]);
 
          // アイコンのアップロード処理
@@ -101,7 +116,13 @@ class UserController extends Controller
         $user->update([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
+            'comment' => $request->input('comment'),
+            'password' => $request->filled('password') ? Hash::make($request->input('password')) : $user->password,
+            // 'password' => Hash::make($request->input('password')),
         ]);
+        // $user->save();
+        // dd($user->comment);
+        // dd($request->input('comment'));
 
         // 更新が成功した場合はリダイレクト
         return redirect()->route('user.index')->with('flash_message', 'ユーザー情報が更新されました。');

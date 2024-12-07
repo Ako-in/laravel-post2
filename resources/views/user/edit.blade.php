@@ -72,12 +72,27 @@
                         <label for="icon" class="col-md-5 col-form-label text-md-left fw-bold">ユーザーアイコン</label>
 
                         <div class="col-md-7">
+                            @if ($user->icon)
+                                <div class="mb-3">
+                                    <img src="{{ asset('storage/images/' . basename($user->icon)) }}" alt="User Icon" class="img-thumbnail rounded-circle" width="100">
+                                    {{-- <img src="{{ asset('storage/' . $user->icon) }}" alt="User Icon" class="rounded-circle" width="100"> --}}
+                                </div>
+                                
+                            @endif
+
                           <input type="file" class="form-control" id="icon" name="icon" accept="image/*">
                         </div>
                     </div>
                     <hr class="my-4">
 
+                    {{-- 自己紹介コメント --}}
+                    <div class="form-group row mb-3">
+                        <label for="comment" class="col-md-5 col-form-label text-md-left fw-bold">コメント</label>
 
+                        <div class="col-md-7">
+                            <textarea class="form-control" id="comment" name="comment" rows="3" placeholder="自己紹介やコメントを入力">{{ old('comment', $user->comment) }}</textarea>
+                        </div>
+                    </div>
                     {{-- パスワード変更 --}}
                     {{-- <div class="form-grouprow mb-3">
                         <label for="password" class="col-md-5 col-form-label text-md-left fw-bold">新しいパスワード</label>
