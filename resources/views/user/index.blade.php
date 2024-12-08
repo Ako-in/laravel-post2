@@ -17,18 +17,6 @@
 
                 <h1 class="mb-3 text-center">会員情報</h1>
 
-                {{-- <div class="d-flex justify-content-end align-items-end mb-3">
-                    <div>
-                        <a href="{{ route('user.edit',$user) }}">編集</a>
-                        <form action="{{ route('user.destroy', $user) }}" method="post" class="d-inline">
-                            @csrf
-                            @method('delete')                                        
-                            <button type="submit" class="dropdown-item text-danger">削除</button>
-                        </form>
-                        
-                    </div>
-                </div> --}}
-
                 @if (session('flash_message'))
                     <div class="alert alert-info" role="alert">
                         <p class="mb-0">{{ session('flash_message') }}</p>
@@ -87,6 +75,7 @@
                         <div class="col">
                             <span>{{ $user->comment }}</span>
                         </div>
+                    </div>
                 </div>
                 <div class="d-flex justify-content-center">
                     <a href="{{ route('user.edit',$user) }}"class="btn btn-primary me-2">編集</a>

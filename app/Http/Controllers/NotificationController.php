@@ -1,22 +1,32 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 
-class HomeController extends Controller
+class NotificationController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
+     public function markAsRead($id)
+     {
+         $notification = Auth::user()->notifications()->find($id);
+ 
+         if ($notification) {
+             $notification->markAsRead();
+         }
+ 
+         return redirect()->route('posts.index');
+     }
+
+
     public function index()
     {
-        // トップ画面またはマイページの処理に未読通知を追加
-        $notifications = auth()->user()->unreadNotifications;
-
-        return view('home', compact('notifications'));
+        //
     }
 
     /**

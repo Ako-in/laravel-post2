@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Post;
+use App\Models\user;
 use App\Models\Comment;
 
 class CommentController extends Controller
@@ -118,6 +119,25 @@ class CommentController extends Controller
         $comment->delete();
 
         return back()->with('message', 'コメントを削除しました');
+    }
+
+    public function addComment(Request $request)
+    {
+        // コメントの保存処理
+        $comment = new Comment();
+        $comment->content = $request->input('content');
+        $comment->post_id = $postId;
+        $comment->user_id = auth()->id();
+        $comment->save();
+
+        // 投稿者に通知を送信
+        $postOwner = User::find($comment->post->user_id); // 投稿者を取得
+        if ($postOwner) { // 投稿者が存在する場合のみ通知
+            $postOwner->notify(new CommentLikedNotification('新しいコメントが追加されました！'));
+        }
+
+        return redirect()->route('posts.show', $postId)
+                         ->with('flash_message', 'コメントを投稿しました！');
     }
 
 }

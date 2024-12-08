@@ -21,6 +21,10 @@
             <!-- ナビゲーションメニュー -->
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
+                    <!-- ホーム -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('home') }}">ホーム</a>
+                    </li>
                     <!-- 会員情報 -->
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('user.index') }}">会員情報</a>

@@ -5,6 +5,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -73,6 +74,14 @@ Route::post('/comments/{comment}/reply', [CommentController::class, 'reply'])->n
 
 //Home
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Route::post('/posts/{post}/comments/add', [PostController::class, 'addComment'])->name('posts.comments.add');
+
+// Route::get('/notifications/{id}', [NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+Route::post('/posts/{post}/comments/add', [CommentController::class, 'addComment'])
+     ->name('comments.add')
+     ->middleware('auth');
 
 // 認証関連のルート
 require __DIR__.'/auth.php';

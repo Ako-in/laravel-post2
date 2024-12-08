@@ -6,6 +6,20 @@
     <p class="text-success">{{ session('flash_message') }}</p>
 @endif
 
+{{-- @if($notifications->isEmpty())
+    <p>新しい通知はありません。</p>
+@else
+    <ul class="list-group">
+       @foreach($notifications as $notification)
+            <li class="list-group-item">
+               {{ $notification->data['message'] ?? '通知内容がありません。' }}
+                <small class="text-muted">{{ $notification->created_at->diffForHumans() }}</small>
+            </li>
+        @endforeach
+    </ul>
+@endif --}}
+
+
 <div class="mb-2">
     <a href="{{ route('posts.create') }}" class="text-decoration-none btn btn-primary">新規投稿</a>                                   
 </div>
@@ -16,63 +30,62 @@
 <div class="container">
     <div class="row">
          @foreach($posts as $post)
-        <div class="card mb-3 mt-3">
-            <div class="card-body flex-start align-items-start">
-                <!-- 左側の投稿情報 -->
-                <div class="d-flex align-items-center mb-3">
-                     {{-- 左アイコンのみ --}}
-                    
-                        {{-- 投稿者アイコンの表示 --}}
-                        <div class="">
-                            <a href="{{ route('user.show', $post->user) }}">
-                                @if ($post->user->icon === null)
-                                    <img src="{{ asset('storage/images/noimage.png') }}" alt="User Icon" class="img-thumbnail rounded-circle" width="60">
-                                @else
-                                    <img src="{{ asset('storage/images/' . basename($post->user->icon)) }}" alt="User Icon" class="img-thumbnail rounded-circle" width="60">
-                                @endif
-                            </a>
-                        </div>
+         <div class="col-ms-6">
+            <div class="card mb-3 mt-3">
+                <div class="card-body flex-start align-items-start">
+                    <!-- 左側の投稿情報 -->
+                    <div class="d-flex align-items-center mb-3">
+                        {{-- 左アイコンのみ --}}
                         
-                    {{-- 右側情報 --}}
-                    <div class="ms-3">
-                        <p>
-                            <p>投稿者：
+                            {{-- 投稿者アイコンの表示 --}}
+                            <div class="col-1">
+                                <a href="{{ route('user.show', $post->user) }}">
+                                    @if ($post->user->icon === null)
+                                        <img src="{{ asset('storage/images/noimage.png') }}" alt="User Icon" class="img-thumbnail rounded-circle" width="60">
+                                    @else
+                                        <img src="{{ asset('storage/images/' . basename($post->user->icon)) }}" alt="User Icon" class="img-thumbnail rounded-circle" width="60">
+                                    @endif
+                                </a>
+                            </div>
+                            
+                        {{-- 右側情報 --}}
+                        <div class="ms-3">
+                            <p class="mb-0 me-3 text-nowrap">投稿者：
                                 <a href="{{ route('user.show', $post->user->id) }}" class="text-decoration-none">
-                                    {{$post->user->name}}
+                                {{$post->user->name}}
                                 </a>
                             </p>
-                        </p>
-                        <small class="text-muted">{{$post->created_at->format('Y-m-d H:i') }}</small>
-                    </div>
-                    <!-- 右側　ログインユーザーの場合、編集削除ボタンを表示 -->
-                    @if(Auth::id() === $post->user_id)
-                        <div class="d-flex justify-content-end align-items-center w-100">
-                            <a href="{{ route('posts.edit', $post) }}" class="btn btn-outline-primary me-1">編集</a>
-                            <form action="{{ route('posts.destroy', $post) }}" method="post">
-                                @csrf                                    
-                                @method('delete')                                        
-                                <button type="submit" class="btn btn-outline-danger">削除</button>
-                            </form>    
-                            <div class="dropdown">
-                                
-                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                                    {{-- 編集 --}}
-                                    <li>
-                                        <a href="{{ route('posts.edit', $post) }}" class="dropdown-item">編集</a>  
-                                    </li>
-                                    {{-- 削除 --}}
-                                    <li>
-                                        <form action="{{ route('posts.destroy', $post) }}" method="post" class="d-inline">
-                                            @csrf
-                                            @method('delete')                                        
-                                            <button type="submit" class="dropdown-item text-danger">削除</button>
-                                        </form>
-                                   </li>
-                                </ul>
-                            </div>
+                            <small class="text-muted">{{$post->created_at->format('Y-m-d H:i') }}</small>
                         </div>
-                    @endif
-            </div>
+                        <!-- 右側　ログインユーザーの場合、編集削除ボタンを表示 -->
+                        @if(Auth::id() === $post->user_id)
+                            <div class="d-flex justify-content-end align-items-center w-100">
+                                <a href="{{ route('posts.edit', $post) }}" class="btn btn-outline-primary me-1">編集</a>
+                                <form action="{{ route('posts.destroy', $post) }}" method="post">
+                                    @csrf                                    
+                                    @method('delete')                                        
+                                    <button type="submit" class="btn btn-outline-danger">削除</button>
+                                </form>    
+                                <div class="dropdown">
+                                    
+                                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                                        {{-- 編集 --}}
+                                        <li>
+                                            <a href="{{ route('posts.edit', $post) }}" class="dropdown-item">編集</a>  
+                                        </li>
+                                        {{-- 削除 --}}
+                                        <li>
+                                            <form action="{{ route('posts.destroy', $post) }}" method="post" class="d-inline">
+                                                @csrf
+                                                @method('delete')                                        
+                                                <button type="submit" class="dropdown-item text-danger">削除</button>
+                                            </form>
+                                    </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        @endif
+                </div>
 
             <div class="card-body justify-content-between align-items-start">
                 <h2 class="card-title fs-5">{{ $post->title }}</h2>
@@ -108,10 +121,6 @@
                 <span class="ms-2">{{ $post->likes->count() }}件</span>
             </div>
 
-           
-
-
-
             <div class="card-footer">
                 <!-- コメントフォーム -->
                 @auth
@@ -129,10 +138,11 @@
                     @foreach($post->comments as $comment)
                         {{-- 親コメントを取得 --}}
                         <p>
+                            >
                             <a href="{{ route('users.show', $comment->user->id) }}" class="text-decoration-none">
-                                >{{ $comment->user->name }}
+                                {{ $comment->user->name }}
                             </a>
-                            {{ $comment->content }}
+                            : {{ $comment->content }}
                         </p>
                         <p>{{$comment->created_at->format('Y-m-d H:i') }}</p>
 
@@ -141,7 +151,12 @@
                             <div style="margin-left: 20px;">
                                 @foreach($comment->replies as $reply)
                                     <hr>
-                                    <p>>>{{ $reply->user->name }}: {{ $reply->content }}</p>
+                                    <p>>>
+                                        <a href="{{ route('users.show', $comment->user->id) }}" class="text-decoration-none">
+                                            {{ $comment->user->name }}
+                                        </a>
+                                        
+                                        : {{ $reply->content }}</p>
                                     <p>{{ $reply->created_at->format('Y-m-d H:i')  }}</p>
                                 @endforeach
                             </div>
@@ -156,6 +171,10 @@
                 @endif
             </div> 
         </div>
+
+
+        </div>
+        
     @endforeach
     </div>
    

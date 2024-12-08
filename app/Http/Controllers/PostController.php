@@ -8,6 +8,7 @@ use App\Models\Comment;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PostRequest;
 use Illuminate\Support\Facades\Log;
+use App\Notifications\CommentLikedNotification;
 
 class PostController extends Controller
 {
@@ -32,9 +33,13 @@ class PostController extends Controller
         // return view('posts.index',compact('posts','comments'));
         // 投稿データを取得（例: ページネーション）
         $posts = Post::with(['user', 'comments.replies', 'likes'])->latest()->paginate(3);
+        $notifications = Auth::user()->notifications;
+
+        // 通知を既読にする
+        Auth::user()->unreadNotifications->markAsRead();
 
         // ビューにデータを渡す
-        return view('posts.index', compact('posts'));
+        return view('posts.index', compact('posts','notifications'));
     }   
 
     /**
@@ -163,4 +168,17 @@ class PostController extends Controller
         $post->delete();
         return redirect()->route('posts.index')->with('flash_message', '投稿が削除されました');
     }
+
+    // public function addComment(Request $request)
+    // {
+    //     // コメントの保存処理
+    //     $comment = Comment::create($request->all());
+
+    //     // 投稿者に通知を送信
+    //     $postOwner = User::find($comment->post->user_id);
+    //     $postOwner->notify(new CommentLikedNotification('あなたの投稿にコメントが追加されました！'));
+
+    //     return redirect()->back();
+    // }
+    
 }
